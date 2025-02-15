@@ -2,11 +2,11 @@
 import { Random } from "@/modules/random";
 import Head from "next/head";
 
-export default function Home() {
+export default function RandomPage() {
   return (
     <>
       <Head>
-        <title>Ăn uống</title>
+        <title>Món ngẫu nhiênÏ</title>
       </Head>
       <Random />
     </>
