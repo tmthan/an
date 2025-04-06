@@ -1,14 +1,13 @@
-"use client";
 import { Random } from "@/modules/random";
-import Head from "next/head";
+import { Metadata } from "next";
+
+export function generateMetadata(): Metadata {
+  return {
+    title: "Chọn món ngẫu nhiên",
+    description: "Dành cho mấy đứa không biết ăn gì",
+  };
+}
 
 export default function RandomPage() {
-  return (
-    <>
-      <Head>
-        <title>Món ngẫu nhiênÏ</title>
-      </Head>
-      <Random />
-    </>
-  );
+  return <Random />;
 }

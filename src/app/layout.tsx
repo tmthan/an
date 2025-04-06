@@ -1,16 +1,19 @@
-"use client"
+"use client";
+import * as React from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { Flex, Layout, Menu, MenuProps } from "antd";
+import { Flex, Layout } from "antd";
 import { Content } from "antd/es/layout/layout";
-import Sider from "antd/es/layout/Sider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
-  HeartOutlined,
-  HomeOutlined,
-  PieChartOutlined,
-  QuestionCircleOutlined,
-} from "@ant-design/icons";
-import Link from "next/link";
+  randomListCollection,
+  randomListRepository,
+} from "@/modules/random/databse";
+import {
+  shareBillCollection,
+  shareBillRepository,
+} from "@/modules/share-bill/database";
+
+const queryClient = new QueryClient();
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,49 +30,37 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const menuItems: MenuProps["items"] = [
-    {
-      key: "home",
-      label: <Link href="/">Trang chủ</Link>,
-      icon: <HomeOutlined />,
-    },
-    {
-      key: "random",
-      label: <Link href="/random">Món ngẫu nhiên</Link>,
-      icon: <QuestionCircleOutlined />,
-    },
-    {
-      key: "share-bill",
-      label: <Link href="/share-bill">Chia tiền</Link>,
-      icon: <PieChartOutlined />,
-    },
-    {
-      key: "my-favorite",
-      label: <Link href="/my-favorite">Quán ngon của tui</Link>,
-      icon: <HeartOutlined />,
-    },
-  ];
+  const [isInitDb, setIsInitDb] = React.useState(false);
+
+  async function initDatabase() {
+    const randomList = await randomListRepository.getRandomList();
+    randomListCollection.insert(randomList);
+    const shareBill = await shareBillRepository.getShareBill();
+    shareBillCollection.insert(shareBill);
+    queryClient.invalidateQueries();
+  }
+
+  React.useEffect(() => {
+    if (!isInitDb) {
+      initDatabase();
+      setIsInitDb(true);
+    }
+  }, [isInitDb]);
 
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Flex gap="middle" wrap>
-          <Layout>
-            <Sider width="25%">
-              <Menu
-                mode="inline"
-                defaultSelectedKeys={["home"]}
-                style={{ height: "100%" }}
-                items={menuItems}
-              />
-            </Sider>
+        <QueryClientProvider client={queryClient}>
+          <Flex gap="middle" wrap>
             <Layout>
-              <Content>{children}</Content>
+              <Layout>
+                <Content>{children}</Content>
+              </Layout>
             </Layout>
-          </Layout>
-        </Flex>
+          </Flex>
+        </QueryClientProvider>
       </body>
     </html>
   );

@@ -1,8 +1,9 @@
 "use client";
-import { Button, Typography, Flex } from "antd";
+import { Button, Col, Row, Typography } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { Food } from "./types";
 import { DEFAULT_RANDOM_LIST } from "./constants";
+import { SelectFood } from "./SelectFood";
 const { Title, Paragraph } = Typography;
 
 export function Random() {
@@ -30,15 +31,25 @@ export function Random() {
   useEffect(() => {
     random();
   }, [random]);
-
   return (
     <>
       <Title>Món ngẫu nhiên</Title>
+      <Row>
+        <Col flex="auto">
+          <Paragraph className="text-center px-14">
+            <Title className="text-center">{selectedFood?.name}</Title>
+          </Paragraph>
+        </Col>
+        <Col flex="none">
+          <SelectFood setFoodList={setFoodList}/>
+        </Col>
+      </Row>
 
       <Paragraph className="text-center">
-        <Title className="text-center">{selectedFood?.name}</Title>
+        <Button onClick={random} variant="outlined" color="magenta">
+          Chọn lại
+        </Button>
       </Paragraph>
-      <Button onClick={random}>Chọn lại</Button>
     </>
   );
 }

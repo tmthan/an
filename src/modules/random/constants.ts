@@ -10,3 +10,5 @@ export const DEFAULT_RANDOM_LIST: Food[] = [
     name: "Cứt",
   },
 ];
+
+export const GET_RANDOM_LIST_QUERY_KEY = "GET_RANDOM_LIST"
