@@ -6,8 +6,8 @@ export const DEFAULT_RANDOM_LIST: Food[] = [
     name: "Cơm",
   },
   {
-    id: "cut",
-    name: "Cứt",
+    id: "pho",
+    name: "Phở",
   },
 ];
 
