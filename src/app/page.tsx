@@ -1,7 +1,14 @@
-"use client";
 import { Col, Row } from "antd";
 import Link from "next/link";
 import { PieChartOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { Metadata } from "next";
+
+export function generateMetadata(): Metadata {
+  return {
+    title: "Ăn uống - Tại sao vậy em",
+    description: "Ăn uống và chia hoá đơn",
+  };
+}
 
 export default function Home() {
   return (
