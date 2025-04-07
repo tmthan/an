@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Button } from "antd";
+import { Button, Card, Flex } from "antd";
 import ShareBillTransaction from "./ShareBillTransaction";
 import History from "./History";
 
@@ -11,18 +11,40 @@ export const ShareBill: React.FC = () => {
     return <ShareBillTransaction setStartTransaction={setStartTransaction} />;
   }
   return (
-    <div>
-      <h1>Chia tiền</h1>
-      <Button
-        type="primary"
-        onClick={() => {
-          setStartTransaction(true);
+    <Flex
+      justify="center"
+      align="center"
+      style={{
+        height: "100vh",
+        background: "url('/chia-tien.jpeg')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}
+    >
+      <Card
+        title="Chia tiền hoá đơn"
+        style={{
+          width: 800,
+          background: "rgba(255, 255, 255, 0.8)",
+          backdropFilter: "blur(10px)",
         }}
       >
-        Bắt đầu
-      </Button>
-      <History />
-    </div>
+        <Flex justify="center" align="center">
+          <Button
+            size="large"
+            type="primary"
+            onClick={() => {
+              setStartTransaction(true);
+            }}
+          >
+            Bắt đầu
+          </Button>
+        </Flex>
+
+        <History />
+      </Card>
+    </Flex>
   );
 };
 

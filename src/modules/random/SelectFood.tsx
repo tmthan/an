@@ -10,10 +10,11 @@ import {
   Input,
   Form,
   List,
+  Divider,
 } from "antd";
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { Food } from "./types";
-import { DeleteOutlined } from "@ant-design/icons";
+import { BarsOutlined, DeleteOutlined } from "@ant-design/icons";
 import { v4 } from "uuid";
 import { useGetRandomListQuery } from "./useRandomListQuery";
 import {
@@ -21,6 +22,7 @@ import {
   useDeleteRandomListMutation,
 } from "./useRandomListMutation";
 import ImportRandomList from "./Import";
+import "./style.css";
 
 const { Title } = Typography;
 type SelectFoodProps = {
@@ -29,9 +31,8 @@ type SelectFoodProps = {
 
 export function SelectFood({ setFoodList }: SelectFoodProps) {
   const [open, setOpen] = useState(false);
-  const [randomListName, setRandomListName] = useState<string>(
-    "Danh sách chưa đặt tên"
-  );
+  const [randomListName, setRandomListName] =
+    useState<string>("Menu chưa đặt tên");
   const [listTemp, setListTemp] = useState<Food[]>([{ id: v4(), name: "" }]);
   const { data: randomList } = useGetRandomListQuery();
   const { mutate: addRandomListMutation } = useAddRandomListMutation();
@@ -118,12 +119,22 @@ export function SelectFood({ setFoodList }: SelectFoodProps) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Chọn món</Button>
+      <Button
+        size="small"
+        onClick={() => setOpen(true)}
+        icon={<BarsOutlined />}
+      >
+        Menu
+      </Button>
       <Drawer
-        title="Chọn món"
+        title="Menu"
         onClose={() => setOpen(false)}
         open={open}
         width="80%"
+        style={{
+          background: "rgba(255, 255, 255, 0.8)",
+          backdropFilter: "blur(10px)",
+        }}
         footer={
           <Row justify="end">
             <Col>
@@ -134,27 +145,34 @@ export function SelectFood({ setFoodList }: SelectFoodProps) {
           </Row>
         }
       >
-        <Row gutter={[10, 10]}>
+        <Row gutter={[20, 0]}>
           <Col span={24} md={12}>
-            <Title level={3}>Nhập danh sách món</Title>
-            <Form>
-              <Form.Item label="Tên danh sách">
-                <Input
-                  allowClear
-                  value={randomListName}
-                  onChange={(event) => setRandomListName(event.target.value)}
-                />
-              </Form.Item>
-            </Form>
-            <ImportRandomList setListTemp={setListTemp} />
+            <Title level={3}>Nhập Menu</Title>
             <Table<Food>
               columns={columns}
               dataSource={listTemp}
               pagination={false}
+              className="random-table"
             />
           </Col>
           <Col span={24} md={12}>
-            <Title level={3}>Danh sách món đã lưu</Title>
+            <Title level={3}>Lưu Menu</Title>
+            <Form>
+              <Form.Item label="Tên Menu">
+                <Input
+                  allowClear
+                  value={randomListName}
+                  onChange={(event) => setRandomListName(event.target.value)}
+                  style={{
+                    background: "rgba(255,255,255,0.3)",
+                    border: "none",
+                  }}
+                />
+              </Form.Item>
+            </Form>
+            <ImportRandomList setListTemp={setListTemp} />
+            <Divider />
+            <Title level={3}>Menu đã lưu</Title>
             <List
               itemLayout="horizontal"
               dataSource={randomList ?? []}
@@ -167,7 +185,7 @@ export function SelectFood({ setFoodList }: SelectFoodProps) {
                         deleteRandomListMutation(item.id);
                       }}
                     >
-                      Xoá
+                      <DeleteOutlined />
                     </a>,
                   ]}
                 >

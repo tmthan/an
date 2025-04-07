@@ -15,6 +15,7 @@ import {
 const { Title } = Typography;
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import FormItem from "antd/es/form/FormItem";
+import "./style.css";
 
 type ShareBillConfigProps = {
   foodList: Food[];
@@ -160,7 +161,7 @@ export const ShareBillConfig = ({
           wrapperCol={{ span: 16 }}
           autoComplete="off"
         >
-          <Row>
+          <Row gutter={[20, 20]}>
             <Col span={12}>
               <FormItem label="Phí vận chuyện + phụ phí">
                 <InputNumber
@@ -170,6 +171,8 @@ export const ShareBillConfig = ({
                   formatter={(value) =>
                     `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
+                  step={1000}
+                  style={{ width: "100%" }}
                 />
               </FormItem>
             </Col>
@@ -183,27 +186,22 @@ export const ShareBillConfig = ({
                   formatter={(value) =>
                     `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                   }
+                  style={{ width: "100%" }}
                 />
               </FormItem>
             </Col>
           </Row>
-          <Row>
+          <Row gutter={[20, 20]}>
             <Col span={12}>
-              <Form.Item name="radio-button" label="Radio.Button">
+              <Form.Item name="radio-button" label="Cách chia">
                 <Radio.Group
                   onChange={(e) => setCalculatorMode(e.target.value)}
                   value={calculatorMode}
                 >
-                  <Radio
-                    value={CalculateMode.ShareByMember}
-                  >
+                  <Radio value={CalculateMode.ShareByMember}>
                     Chia theo đầu người
                   </Radio>
-                  <Radio
-                    value={CalculateMode.ShareByFood}
-                  >
-                    Chia theo món
-                  </Radio>
+                  <Radio value={CalculateMode.ShareByFood}>Chia theo món</Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -217,6 +215,7 @@ export const ShareBillConfig = ({
           columns={columns}
           dataSource={dataSource}
           pagination={false}
+          className="share-bill-table"
         />
       </Col>
     </Row>

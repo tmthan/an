@@ -1,18 +1,28 @@
 "use client";
-import { Button, Col, Row, Typography } from "antd";
+import { Button, Card, Flex, Typography } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { Food } from "./types";
 import { DEFAULT_RANDOM_LIST } from "./constants";
 import { SelectFood } from "./SelectFood";
+import { GiftOutlined } from "@ant-design/icons";
+import { useGetRandomListQuery } from "./useRandomListQuery";
+
 const { Title, Paragraph } = Typography;
 
 export function Random() {
-  const [foodList, setFoodList] = useState<Food[]>(DEFAULT_RANDOM_LIST);
+  const { data: randomList, isFetched } = useGetRandomListQuery();
+  const [foodList, setFoodList] = useState<Food[]>([]);
   const [selectedFood, setSelectedFood] = useState<Food>();
 
   const getRandomFood = useCallback(() => {
-    return foodList[Math.floor(Math.random() * foodList.length)];
-  }, [foodList]);
+    if (foodList?.length) {
+      return foodList[Math.floor(Math.random() * foodList.length)];
+    }
+    if (isFetched && randomList?.length) {
+      return randomList[0].items[Math.floor(Math.random() * randomList[0].items.length)];
+    }
+    return DEFAULT_RANDOM_LIST[Math.floor(Math.random() * DEFAULT_RANDOM_LIST.length)];
+  }, [foodList, isFetched, randomList]);
 
   const random = useCallback(() => {
     let selected: Food = getRandomFood();
@@ -29,28 +39,50 @@ export function Random() {
   }, [getRandomFood]);
 
   useEffect(() => {
-    random();
-  }, [random]);
+    if (isFetched && randomList) {
+      random();
+    }
+  }, [random, isFetched, randomList]);
   return (
-    <>
-      <Title>Món ngẫu nhiên</Title>
-      <Row>
-        <Col flex="auto">
+    <Flex
+      justify="center"
+      align="center"
+      style={{
+        height: "100vh",
+        background: "url('/ban-tiec.jpeg')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}
+    >
+      <Card
+        title="Hôm nay ăn gì?"
+        style={{
+          width: 400,
+          background: "rgba(255, 255, 255, 0.8)",
+          backdropFilter: "blur(10px)",
+        }}
+        extra={<SelectFood setFoodList={setFoodList} />}
+      >
+        <Flex gap="middle" align="center" vertical>
           <Paragraph className="text-center px-14">
-            <Title className="text-center">{selectedFood?.name}</Title>
+            <Title
+              className="text-center"
+              style={{
+                background: "-webkit-linear-gradient(#7F00FF, #E100FF)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              {selectedFood?.name}
+            </Title>
           </Paragraph>
-        </Col>
-        <Col flex="none">
-          <SelectFood setFoodList={setFoodList}/>
-        </Col>
-      </Row>
-
-      <Paragraph className="text-center">
-        <Button onClick={random} variant="outlined" color="magenta">
-          Chọn lại
-        </Button>
-      </Paragraph>
-    </>
+          <Button onClick={random} type="primary" icon={<GiftOutlined />}>
+            Chọn lại
+          </Button>
+        </Flex>
+      </Card>
+    </Flex>
   );
 }
 

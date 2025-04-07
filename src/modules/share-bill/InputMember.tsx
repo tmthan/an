@@ -3,6 +3,7 @@ import { Member } from "./types";
 import { v4 } from "uuid";
 import { Col, Input, Row, Table, TableProps, Typography } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
+import "./style.css";
 const { Title } = Typography;
 
 type InputMemberProps = {
@@ -79,6 +80,7 @@ export const InputMember = ({
       </Col>
       <Col span={24}>
         <Table<Member>
+          className="share-bill-table"
           columns={columns}
           dataSource={memberList}
           pagination={false}

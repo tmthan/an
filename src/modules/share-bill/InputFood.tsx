@@ -11,6 +11,7 @@ import {
 } from "antd";
 import { v4 } from "uuid";
 import { DeleteOutlined } from "@ant-design/icons";
+import "./style.css";
 const { Title } = Typography;
 
 type InputFoodProps = {
@@ -95,6 +96,7 @@ export const InputFood = ({ foodList, setFoodList }: InputFoodProps) => {
       render(value, record, index) {
         return (
           <InputNumber
+          style={{ width: "100%" }}
             value={value}
             formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
             placeholder="Tab để sang ô kế tiếp"
@@ -128,6 +130,7 @@ export const InputFood = ({ foodList, setFoodList }: InputFoodProps) => {
           columns={columns}
           dataSource={foodList}
           pagination={false}
+          className="share-bill-table"
         />
       </Col>
     </Row>

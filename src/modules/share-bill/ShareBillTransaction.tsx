@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Button, message, Steps, theme } from "antd";
+import { Button, Card, Flex, message, Steps, theme } from "antd";
 import { InputFood } from "./InputFood";
 import { InputMember } from "./InputMember";
 import { ShareBillConfig } from "./ShareBillConfig";
@@ -154,33 +154,59 @@ export function ShareBillTransaction({
   };
 
   return (
-    <>
-      <Steps current={current} items={items} />
-      <div style={contentStyle}>{steps[current].content}</div>
-      <div style={{ marginTop: 24 }}>
-        {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Tiếp
-          </Button>
-        )}
-        {current === steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={() => {
-              message.success("Processing complete!");
-              onDone();
-            }}
-          >
-            Xong
-          </Button>
-        )}
-        {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-            Trước
-          </Button>
-        )}
-      </div>
-    </>
+    <Flex
+      justify="center"
+      align="center"
+      style={{
+        height: "100vh",
+        background: "url('/ban-tiec.jpeg')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        padding: 20,
+        overflow: "auto",
+      }}
+    >
+      <Card
+        style={{
+          width: "100%",
+          background: "rgba(255, 255, 255, 0.8)",
+          backdropFilter: "blur(10px)",
+        }}
+        styles={{
+          body: {
+            overflow: "auto",
+            height: "calc(100vh - 100px)",
+          },
+        }}
+      >
+        <Steps current={current} items={items} />
+        <div style={contentStyle}>{steps[current].content}</div>
+        <div style={{ marginTop: 24 }}>
+          {current < steps.length - 1 && (
+            <Button type="primary" onClick={() => next()}>
+              Tiếp
+            </Button>
+          )}
+          {current === steps.length - 1 && (
+            <Button
+              type="primary"
+              onClick={() => {
+                message.success("Processing complete!");
+                onDone();
+              }}
+            >
+              Xong
+            </Button>
+          )}
+          {current > 0 && (
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              Trước
+            </Button>
+          )}
+        </div>
+      </Card>
+    </Flex>
   );
 }
 

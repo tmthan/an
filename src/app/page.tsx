@@ -1,4 +1,4 @@
-import { Col, Row } from "antd";
+import { Card, Col, Flex, Row } from "antd";
 import Link from "next/link";
 import { PieChartOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { Metadata } from "next";
@@ -15,30 +15,56 @@ export default function Home() {
     <Row
       justify="center"
       align="middle"
-      gutter={[20, 20]}
-      style={{ height: "100vh" }}
+      gutter={[40, 40]}
+      style={{
+        height: "100vh",
+        backgroundImage: "url('/khu-pho.jpeg')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}
     >
       <Col>
-        <Link href="/random">
-          <QuestionCircleOutlined
-            style={{
-              fontSize: "40px",
-            }}
-          />
-          <br />
-          Hôm nay ăn gì?
-        </Link>
+        <Card
+          style={{
+            background: "rgba(255, 255, 255, 0.8)",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          <Link href="/random">
+            <Flex gap="middle" align="center" vertical>
+              <div>
+                <QuestionCircleOutlined
+                  style={{
+                    fontSize: "80px",
+                  }}
+                />
+              </div>
+              <div>Hôm nay ăn gì?</div>
+            </Flex>
+          </Link>
+        </Card>
       </Col>
       <Col>
-        <Link href="/share-bill">
-          <PieChartOutlined
-            style={{
-              fontSize: "40px",
-            }}
-          />
-          <br />
-          Chia tiền
-        </Link>
+        <Card
+          style={{
+            background: "rgba(255, 255, 255, 0.8)",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          <Link href="/share-bill">
+            <Flex gap="middle" align="center" vertical>
+              <div>
+                <PieChartOutlined
+                  style={{
+                    fontSize: "80px",
+                  }}
+                />
+              </div>
+              <div>Chia tiền hoá đơn</div>
+            </Flex>
+          </Link>
+        </Card>
       </Col>
     </Row>
   );

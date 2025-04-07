@@ -3,6 +3,7 @@ import { Modal, Table, TableProps, Typography } from "antd";
 import { useGetShareBillQuery } from "./useShareBillQuery";
 import { ShareBillLog } from "./types";
 import { Result } from "./Result";
+import "./style.css";
 
 const { Title } = Typography;
 export function History() {
@@ -37,6 +38,7 @@ export function History() {
         columns={columns}
         dataSource={data}
         pagination={false}
+        className="share-bill-table"
       />
       <Modal
         footer={false}

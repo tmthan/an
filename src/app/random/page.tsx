@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 export function generateMetadata(): Metadata {
   return {
-    title: "Chọn món ngẫu nhiên",
+    title: "Hôm nay ăn gì?",
     description: "Dành cho mấy đứa không biết ăn gì",
   };
 }

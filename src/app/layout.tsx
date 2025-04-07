@@ -1,8 +1,7 @@
 "use client";
 import * as React from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Flex, Layout } from "antd";
-import { Content } from "antd/es/layout/layout";
+import { ConfigProvider } from "antd";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   randomListCollection,
@@ -50,16 +49,25 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        style={{ overflow: "hidden", padding: 0, margin: 0 }}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryClientProvider client={queryClient}>
-          <Flex gap="middle" wrap>
-            <Layout>
-              <Layout>
-                <Content>{children}</Content>
-              </Layout>
-            </Layout>
-          </Flex>
+          <ConfigProvider
+            theme={{
+              token: {
+                // Seed Token
+                colorPrimary: "#945034",
+                borderRadius: 12,
+
+                // Alias Token
+
+                colorLink: "#945034",
+              },
+            }}
+          >
+            {children}
+          </ConfigProvider>
         </QueryClientProvider>
       </body>
     </html>
