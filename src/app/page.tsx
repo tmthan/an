@@ -1,7 +1,7 @@
 import { Card, Col, Flex, Row } from "antd";
 import Link from "next/link";
 import { PieChartOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 
 export function generateMetadata(): Metadata {
   return {
@@ -9,6 +9,11 @@ export function generateMetadata(): Metadata {
     description: "Ăn uống và chia hoá đơn",
   };
 }
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export default function Home() {
   return (

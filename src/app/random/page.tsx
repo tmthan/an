@@ -1,5 +1,5 @@
 import { Random } from "@/modules/random";
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 
 export function generateMetadata(): Metadata {
   return {
@@ -7,6 +7,11 @@ export function generateMetadata(): Metadata {
     description: "Dành cho mấy đứa không biết ăn gì",
   };
 }
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export default function RandomPage() {
   return <Random />;
