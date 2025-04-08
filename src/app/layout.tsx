@@ -11,6 +11,7 @@ import {
   shareBillCollection,
   shareBillRepository,
 } from "@/modules/share-bill/database";
+import "./global.css";
 
 const queryClient = new QueryClient();
 

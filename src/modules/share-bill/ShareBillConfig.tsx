@@ -1,21 +1,12 @@
 "use client";
 import * as React from "react";
 import { BillItem, CalculateMode, Food, Member } from "./types";
-import {
-  Button,
-  Col,
-  Form,
-  InputNumber,
-  Radio,
-  Row,
-  Space,
-  Table,
-  Typography,
-} from "antd";
-const { Title } = Typography;
+import { Button, Col, Form, InputNumber, Radio, Row, Space, Table } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import FormItem from "antd/es/form/FormItem";
 import "./style.css";
+import { useIsDesktop } from "../share/hooks";
+import Paragraph from "antd/es/typography/Paragraph";
 
 type ShareBillConfigProps = {
   foodList: Food[];
@@ -42,6 +33,7 @@ export const ShareBillConfig = ({
   calculatorMode,
   setCalculatorMode,
 }: ShareBillConfigProps) => {
+  const isDesktop = useIsDesktop();
   function onChangeInputNumber(
     value: number,
     foodId: string,
@@ -96,28 +88,32 @@ export const ShareBillConfig = ({
         render(value: number, record: Record<string, unknown>) {
           return (
             <Space>
-              <Button
-                shape="circle"
-                onClick={() =>
-                  onSubQuantity(record.foodId as string, member.id)
-                }
-                icon={<MinusOutlined />}
-                size="small"
-              ></Button>
-              <InputNumber
-                value={value}
-                onChange={(_val) =>
-                  onChangeInputNumber(
-                    _val ?? 0,
-                    record.foodId as string,
-                    member.id
-                  )
-                }
-                style={{ width: 50 }}
-                formatter={(value) =>
-                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }
-              />
+              {value > 0 && (
+                <Button
+                  shape="circle"
+                  onClick={() =>
+                    onSubQuantity(record.foodId as string, member.id)
+                  }
+                  icon={<MinusOutlined />}
+                  size="small"
+                ></Button>
+              )}
+              {value > 0 && (
+                <InputNumber
+                  value={value}
+                  onChange={(_val) =>
+                    onChangeInputNumber(
+                      _val ?? 0,
+                      record.foodId as string,
+                      member.id
+                    )
+                  }
+                  style={{ width: 50 }}
+                  formatter={(value) =>
+                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  }
+                />
+              )}
               <Button
                 shape="circle"
                 icon={<PlusOutlined />}
@@ -153,16 +149,13 @@ export const ShareBillConfig = ({
   return (
     <Row>
       <Col span={24}>
-        <Title level={3}>Chia tiền</Title>
-      </Col>
-      <Col span={24}>
         <Form
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           autoComplete="off"
         >
           <Row gutter={[20, 20]}>
-            <Col span={12}>
+            <Col span={24} md={12}>
               <FormItem label="Phí vận chuyện + phụ phí">
                 <InputNumber
                   value={shippingFee}
@@ -176,7 +169,7 @@ export const ShareBillConfig = ({
                 />
               </FormItem>
             </Col>
-            <Col span={12}>
+            <Col span={24} md={12}>
               <FormItem label="Giảm giá">
                 <InputNumber
                   value={discountAmount}
@@ -192,7 +185,7 @@ export const ShareBillConfig = ({
             </Col>
           </Row>
           <Row gutter={[20, 20]}>
-            <Col span={12}>
+            <Col span={24} md={12}>
               <Form.Item name="radio-button" label="Cách chia">
                 <Radio.Group
                   onChange={(e) => setCalculatorMode(e.target.value)}
@@ -205,10 +198,14 @@ export const ShareBillConfig = ({
                 </Radio.Group>
               </Form.Item>
             </Col>
-            <Col span={12}></Col>
           </Row>
         </Form>
       </Col>
+      {!isDesktop && (
+        <Paragraph>
+          Giao diện dành riêng cho điện thoại sẽ sớm được cập nhật
+        </Paragraph>
+      )}
       <Col span={24}>
         <Table
           scroll={{ y: 55 * 5, x: "max-content" }}

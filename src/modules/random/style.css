@@ -12,3 +12,31 @@
 .random-table .ant-table-tbody > tr > td {
   background-color: #fff !important;
 }
+
+.food-name {
+  background: -webkit-linear-gradient(#7f00ff, #e100ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.random-card {
+  width: 100%;
+}
+
+.random-drawer {
+  background-color: gba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(10px);
+}
+
+@media screen and (min-width: 768px) {
+  .food-name {
+    font-size: 3rem;
+  }
+
+  .random-card {
+    width: 400px;
+  }
+}

@@ -23,6 +23,7 @@ import {
 } from "./useRandomListMutation";
 import ImportRandomList from "./Import";
 import "./style.css";
+import { useIsDesktop } from "../share/hooks";
 
 const { Title } = Typography;
 type SelectFoodProps = {
@@ -37,6 +38,7 @@ export function SelectFood({ setFoodList }: SelectFoodProps) {
   const { data: randomList } = useGetRandomListQuery();
   const { mutate: addRandomListMutation } = useAddRandomListMutation();
   const { mutate: deleteRandomListMutation } = useDeleteRandomListMutation();
+  const isDesktop = useIsDesktop()
   const onChangeInput = useCallback(
     (name: string, index: number) => {
       const newList = listTemp.map((item, _index) => {
@@ -130,11 +132,8 @@ export function SelectFood({ setFoodList }: SelectFoodProps) {
         title="Menu"
         onClose={() => setOpen(false)}
         open={open}
-        width="80%"
-        style={{
-          background: "rgba(255, 255, 255, 0.8)",
-          backdropFilter: "blur(10px)",
-        }}
+        width={isDesktop ? "80%" : "100%"}
+        className="random-drawer"
         footer={
           <Row justify="end">
             <Col>

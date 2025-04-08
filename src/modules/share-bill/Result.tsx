@@ -1,8 +1,7 @@
 import * as React from "react";
-import { Table, TableProps, Typography } from "antd";
+import { List, Table, TableProps } from "antd";
 import { BillItem, CalculateMode, Food, Member } from "./types";
 import _ from "lodash";
-const { Title } = Typography;
 type ResultItemTable = {
   member: string;
   money: number;
@@ -25,11 +24,31 @@ export const Result = ({
   discountAmount,
   shippingFee,
 }: ResultProps) => {
+  const memberById = _.keyBy(memberList, "id");
+  const getFoodOfMember = React.useCallback(
+    (member: string) => {
+      const foodById = _.keyBy(foodList, "id");
+      return billItems
+        .filter((item) => item.member === member && item.quantity > 0)
+        .map((item) => foodById[item.food]?.name)
+        .join(", ");
+    },
+    [billItems, foodList]
+  );
+
   const columns: TableProps<ResultItemTable>["columns"] = [
     {
       title: "Tên thành viên",
       dataIndex: "member",
       key: "member",
+      render: (memberId) => {
+        return (
+          <List.Item.Meta
+            title={memberById[memberId]?.name ?? ""}
+            description={getFoodOfMember(memberId)}
+          />
+        );
+      },
     },
     {
       title: "Tiền",
@@ -42,12 +61,13 @@ export const Result = ({
   ];
 
   const dataSource = React.useMemo(() => {
-    const billItemsValue = billItems.filter((item) => item.quantity > 0);
+    const billItemsValue = billItems.filter(
+      (item) => item.quantity > 0 && item.member && item.food
+    );
     const billItemByMember = _.groupBy(billItemsValue, "member");
     const foodById = _.keyBy(foodList, "id");
     const countMember = Object.keys(billItemByMember).length;
     const countFood = _.sumBy(billItemsValue, "quantity");
-    const memberById = _.keyBy(memberList, "id");
 
     const avrageByMember = _.round(
       (shippingFee - discountAmount) / countMember
@@ -64,7 +84,7 @@ export const Result = ({
 
         return {
           key: memberId,
-          member: memberById[memberId]?.name ?? "",
+          member: memberId,
           money: _.round(total + avrageByMember),
         };
       });
@@ -87,14 +107,9 @@ export const Result = ({
     calculatorMode,
     discountAmount,
     foodList,
-    memberList,
+    memberById,
     shippingFee,
   ]);
 
-  return (
-    <>
-      <Title level={3}>Kết Quả</Title>
-      <Table columns={columns} dataSource={dataSource} pagination={false} />
-    </>
-  );
+  return <Table columns={columns} dataSource={dataSource} pagination={false} />;
 };

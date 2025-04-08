@@ -19,9 +19,13 @@ export function Random() {
       return foodList[Math.floor(Math.random() * foodList.length)];
     }
     if (isFetched && randomList?.length) {
-      return randomList[0].items[Math.floor(Math.random() * randomList[0].items.length)];
+      return randomList[0].items[
+        Math.floor(Math.random() * randomList[0].items.length)
+      ];
     }
-    return DEFAULT_RANDOM_LIST[Math.floor(Math.random() * DEFAULT_RANDOM_LIST.length)];
+    return DEFAULT_RANDOM_LIST[
+      Math.floor(Math.random() * DEFAULT_RANDOM_LIST.length)
+    ];
   }, [foodList, isFetched, randomList]);
 
   const random = useCallback(() => {
@@ -47,35 +51,19 @@ export function Random() {
     <Flex
       justify="center"
       align="center"
+      className="app-container"
       style={{
-        height: "100vh",
         background: "url('/ban-tiec.jpeg')",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
       }}
     >
       <Card
         title="Hôm nay ăn gì?"
-        style={{
-          width: 400,
-          background: "rgba(255, 255, 255, 0.8)",
-          backdropFilter: "blur(10px)",
-        }}
+        className="app-card random-card"
         extra={<SelectFood setFoodList={setFoodList} />}
       >
         <Flex gap="middle" align="center" vertical>
           <Paragraph className="text-center px-14">
-            <Title
-              className="text-center"
-              style={{
-                background: "-webkit-linear-gradient(#7F00FF, #E100FF)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              {selectedFood?.name}
-            </Title>
+            <Title className="food-name">{selectedFood?.name}</Title>
           </Paragraph>
           <Button onClick={random} type="primary" icon={<GiftOutlined />}>
             Chọn lại

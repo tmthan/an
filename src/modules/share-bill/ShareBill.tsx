@@ -14,22 +14,12 @@ export const ShareBill: React.FC = () => {
     <Flex
       justify="center"
       align="center"
+      className="app-container"
       style={{
-        height: "100vh",
         background: "url('/chia-tien.jpeg')",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
       }}
     >
-      <Card
-        title="Chia tiền hoá đơn"
-        style={{
-          width: 800,
-          background: "rgba(255, 255, 255, 0.8)",
-          backdropFilter: "blur(10px)",
-        }}
-      >
+      <Card title="Chia tiền hoá đơn" className="app-card share-bill-card">
         <Flex justify="center" align="center">
           <Button
             size="large"
@@ -41,7 +31,6 @@ export const ShareBill: React.FC = () => {
             Bắt đầu
           </Button>
         </Flex>
-
         <History />
       </Card>
     </Flex>

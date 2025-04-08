@@ -1,14 +1,14 @@
 "use client";
 import * as React from "react";
-import { Button, Card, Flex, message, Steps, theme } from "antd";
-import { InputFood } from "./InputFood";
-import { InputMember } from "./InputMember";
+import { Button, Card, Divider, Flex, message, Steps, theme } from "antd";
 import { ShareBillConfig } from "./ShareBillConfig";
 import { Result } from "./Result";
 import { BillItem, CalculateMode, Food, Member } from "./types";
 import { v4 } from "uuid";
 import { useAddShareBillMutation } from "./useShareBillMutation";
 import dayjs from "dayjs";
+import PrepareData from "./PrepareData";
+import { useIsDesktop } from "../share/hooks";
 
 type ShareBillTransactionProps = {
   setStartTransaction: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,7 +23,7 @@ export function ShareBillTransaction({
     {
       id: v4(),
       name: "",
-      price: 0,
+      price: null,
     },
   ]);
   const [memberList, setMemberList] = React.useState<Member[]>([
@@ -39,16 +39,17 @@ export function ShareBillTransaction({
     CalculateMode.ShareByMember
   );
   const { mutate: saveShareBillLogMutation } = useAddShareBillMutation();
-
+  const isDesktop = useIsDesktop();
   const steps = [
     {
-      title: "Nhập danh sách món",
-      content: <InputFood foodList={foodList} setFoodList={setFoodList} />,
-    },
-    {
-      title: "Nhập danh sách thành viên",
+      title: "Nhập dữ liệu",
       content: (
-        <InputMember memberList={memberList} setMemberList={setMemberList} />
+        <PrepareData
+          foodList={foodList}
+          setFoodList={setFoodList}
+          memberList={memberList}
+          setMemberList={setMemberList}
+        />
       ),
     },
     {
@@ -85,13 +86,17 @@ export function ShareBillTransaction({
 
   const initCalculator = () => {
     const _billItems: BillItem[] = [];
-    for (const food of foodList) {
-      for (const member of memberList) {
+    for (const [foodIndex, food] of foodList
+      .filter((item) => item.name)
+      .entries()) {
+      for (const [memberIndex, member] of memberList
+        .filter((item) => item.name)
+        .entries()) {
         _billItems.push({
           id: v4(),
           food: food.id,
           member: member.id,
-          quantity: 0,
+          quantity: foodIndex === memberIndex ? 1 : 0,
         });
       }
     }
@@ -125,7 +130,7 @@ export function ShareBillTransaction({
       {
         id: v4(),
         name: "",
-        price: 0,
+        price: null,
       },
     ]);
     setMemberList([
@@ -144,13 +149,8 @@ export function ShareBillTransaction({
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
   const contentStyle: React.CSSProperties = {
-    lineHeight: "260px",
-    textAlign: "center",
     color: token.colorTextTertiary,
-    backgroundColor: token.colorFillAlter,
     borderRadius: token.borderRadiusLG,
-    border: `1px dashed ${token.colorBorder}`,
-    marginTop: 16,
   };
 
   return (
@@ -181,8 +181,12 @@ export function ShareBillTransaction({
         }}
       >
         <Steps current={current} items={items} />
-        <div style={contentStyle}>{steps[current].content}</div>
-        <div style={{ marginTop: 24 }}>
+        {!isDesktop && <Divider />}
+        <div style={contentStyle} className="transaction-wrapper">
+          {steps[current].content}
+        </div>
+        <Divider />
+        <div>
           {current < steps.length - 1 && (
             <Button type="primary" onClick={() => next()}>
               Tiếp
