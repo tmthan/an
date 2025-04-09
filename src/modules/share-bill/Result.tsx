@@ -1,8 +1,9 @@
 import * as React from "react";
-import { List, Table, TableProps, Badge, Tag, Space } from "antd";
+import { List, Table, TableProps, Badge, Tag, Space, Typography } from "antd";
 import { BillItem, CalculateMode, Food, Member } from "./types";
 import _ from "lodash";
 import { numify } from "numify";
+const { Text } = Typography;
 
 type ResultItemTable = {
   member: string;
@@ -77,6 +78,17 @@ export const Result = ({
       },
     },
     {
+      title: "Tổng phải trả",
+      dataIndex: "money",
+      key: "money",
+      align: "right",
+      render(value) {
+        return (
+          <Text strong>{new Intl.NumberFormat("en-US").format(value)}</Text>
+        );
+      },
+    },
+    {
       title: "Tổng tiền món",
       dataIndex: "totalFood",
       align: "right",
@@ -98,15 +110,6 @@ export const Result = ({
       align: "right",
       render(value) {
         return "-" + new Intl.NumberFormat("en-US").format(value);
-      },
-    },
-    {
-      title: "Tổng phải trả",
-      dataIndex: "money",
-      key: "money",
-      align: "right",
-      render(value) {
-        return new Intl.NumberFormat("en-US").format(value);
       },
     },
   ];

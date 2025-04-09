@@ -7,6 +7,7 @@ import FormItem from "antd/es/form/FormItem";
 import "./style.css";
 import { useIsDesktop } from "../share/hooks";
 import Paragraph from "antd/es/typography/Paragraph";
+import ShareBillConfigMobile from "./ShareBillConfigMobile";
 
 type ShareBillConfigProps = {
   foodList: Food[];
@@ -146,6 +147,22 @@ export const ShareBillConfig = ({
     }
     return data;
   }, [foodList, memberList, billItems]);
+  if (!isDesktop) {
+    return (
+      <ShareBillConfigMobile
+        foodList={foodList}
+        memberList={memberList}
+        billItems={billItems}
+        setBillItems={setBillItems}
+        shippingFee={shippingFee}
+        setShippingFee={setShippingFee}
+        discountAmount={discountAmount}
+        setDiscountAmount={setDiscountAmount}
+        calculatorMode={calculatorMode}
+        setCalculatorMode={setCalculatorMode}
+      />
+    );
+  }
   return (
     <Row>
       <Col span={24}>
