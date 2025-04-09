@@ -1,7 +1,7 @@
 import { Card, Col, Flex, Row } from "antd";
 import Link from "next/link";
-import { PieChartOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { Metadata, Viewport } from "next";
+import Image from "next/image";
 
 export function generateMetadata(): Metadata {
   return {
@@ -22,50 +22,37 @@ export default function Home() {
       align="middle"
       gutter={[40, 40]}
       style={{
-        height: "100vh",
         backgroundImage: "url('/khu-pho.jpeg')",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
       }}
+      className="app-container"
     >
       <Col>
-        <Card
-          style={{
-            background: "rgba(255, 255, 255, 0.8)",
-            backdropFilter: "blur(10px)",
-          }}
-        >
+        <Card className="menu-item">
           <Link href="/random">
-            <Flex gap="middle" align="center" vertical>
-              <div>
-                <QuestionCircleOutlined
-                  style={{
-                    fontSize: "80px",
-                  }}
-                />
-              </div>
+            <Flex gap="small" align="center" vertical>
+              <Image
+                src="/suy-nghi-hom-nay-an-gi.jpg"
+                alt="Hôm nay ăn gì"
+                width={120}
+                height={120}
+                className="img"
+              />
               <div>Hôm nay ăn gì?</div>
             </Flex>
           </Link>
         </Card>
       </Col>
       <Col>
-        <Card
-          style={{
-            background: "rgba(255, 255, 255, 0.8)",
-            backdropFilter: "blur(10px)",
-          }}
-        >
+        <Card className="menu-item">
           <Link href="/share-bill">
-            <Flex gap="middle" align="center" vertical>
-              <div>
-                <PieChartOutlined
-                  style={{
-                    fontSize: "80px",
-                  }}
-                />
-              </div>
+            <Flex gap="small" align="center" vertical>
+              <Image
+                src="/chia-tien-cung-nhau.jpeg"
+                alt="Chia tiền hoá đơn"
+                width={120}
+                height={120}
+                className="img"
+              />
               <div>Chia tiền hoá đơn</div>
             </Flex>
           </Link>

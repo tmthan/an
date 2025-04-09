@@ -1,8 +1,8 @@
 .app-container {
   padding: 1rem;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
   height: 100vh;
 }
 
@@ -31,10 +31,22 @@
   }
 }
 
-.text-right {
-  text-align: right;
+.menu-item {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem !important;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease-in-out;
 }
 
-.text-center {
-  text-align: center;
+.menu-item:hover {
+  transform: scale(1.2);
+}
+
+.menu-item .img {
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.menu-item .ant-card-body {
+  padding: 0;
 }
