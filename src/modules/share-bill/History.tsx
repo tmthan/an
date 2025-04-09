@@ -8,7 +8,9 @@ import "./style.css";
 const { Title } = Typography;
 export function History() {
   const { data } = useGetShareBillQuery();
-  const [selectedLog, setSelectedLog] = React.useState<ShareBillLog | null>(null);
+  const [selectedLog, setSelectedLog] = React.useState<ShareBillLog | null>(
+    null
+  );
   const [isOpen, setIsOpen] = React.useState(false);
 
   const columns: TableProps<ShareBillLog>["columns"] = [
@@ -44,6 +46,14 @@ export function History() {
         footer={false}
         open={isOpen}
         onCancel={() => setIsOpen(false)}
+        width={{
+          xs: "90%",
+          sm: "90%",
+          md: "90%",
+          lg: "80%",
+          xl: "70%",
+          xxl: "60%",
+        }}
       >
         {selectedLog && (
           <Result

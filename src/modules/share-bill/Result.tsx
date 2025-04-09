@@ -1,9 +1,14 @@
 import * as React from "react";
-import { List, Table, TableProps } from "antd";
+import { List, Table, TableProps, Badge, Tag, Space } from "antd";
 import { BillItem, CalculateMode, Food, Member } from "./types";
 import _ from "lodash";
+import { numify } from "numify";
+
 type ResultItemTable = {
   member: string;
+  totalFood: number;
+  shippingFee: number;
+  discountAmount: number;
   money: number;
 };
 
@@ -25,13 +30,34 @@ export const Result = ({
   shippingFee,
 }: ResultProps) => {
   const memberById = _.keyBy(memberList, "id");
+
   const getFoodOfMember = React.useCallback(
     (member: string) => {
       const foodById = _.keyBy(foodList, "id");
-      return billItems
-        .filter((item) => item.member === member && item.quantity > 0)
-        .map((item) => foodById[item.food]?.name)
-        .join(", ");
+      return (
+        <Space size="large">
+          {billItems
+            .filter((item) => item.member === member && item.quantity > 0)
+            .map((item) => (
+              <Badge
+                key={item.id}
+                count={numify(foodById[item.food].price ?? 0)}
+                color="pink"
+              >
+                <Tag bordered={false} color="blue">
+                  {item.quantity > 1 ? (
+                    <>
+                      <Badge count={item.quantity} color="green" />
+                      {foodById[item.food]?.name}
+                    </>
+                  ) : (
+                    foodById[item.food]?.name
+                  )}
+                </Tag>
+              </Badge>
+            ))}
+        </Space>
+      );
     },
     [billItems, foodList]
   );
@@ -51,16 +77,41 @@ export const Result = ({
       },
     },
     {
-      title: "Tiền",
+      title: "Tổng tiền món",
+      dataIndex: "totalFood",
+      align: "right",
+      render(value) {
+        return new Intl.NumberFormat("en-US").format(value);
+      },
+    },
+    {
+      title: "Phí Ship",
+      dataIndex: "shippingFee",
+      align: "right",
+      render(value) {
+        return new Intl.NumberFormat("en-US").format(value);
+      },
+    },
+    {
+      title: "Giảm giá",
+      dataIndex: "discountAmount",
+      align: "right",
+      render(value) {
+        return "-" + new Intl.NumberFormat("en-US").format(value);
+      },
+    },
+    {
+      title: "Tổng phải trả",
       dataIndex: "money",
       key: "money",
+      align: "right",
       render(value) {
         return new Intl.NumberFormat("en-US").format(value);
       },
     },
   ];
 
-  const dataSource = React.useMemo(() => {
+  const dataSource = React.useMemo((): ResultItemTable[] => {
     const billItemsValue = billItems.filter(
       (item) => item.quantity > 0 && item.member && item.food
     );
@@ -68,6 +119,12 @@ export const Result = ({
     const foodById = _.keyBy(foodList, "id");
     const countMember = Object.keys(billItemByMember).length;
     const countFood = _.sumBy(billItemsValue, "quantity");
+    const shippingFeePerMemberByMember = _.round(shippingFee / countMember);
+    const shippingFeePerMemberByFood = _.round(shippingFee / countFood);
+    const discountAmountPerMemberByMember = _.round(
+      discountAmount / countMember
+    );
+    const discountAmountPerMemberByFood = _.round(discountAmount / countFood);
 
     const avrageByMember = _.round(
       (shippingFee - discountAmount) / countMember
@@ -76,29 +133,37 @@ export const Result = ({
 
     if (calculatorMode === CalculateMode.ShareByMember) {
       return Object.entries(billItemByMember).map(([memberId, billItem]) => {
-        const food = foodById[billItem[0].food];
-        const total = _.sumBy(
-          billItem,
-          (item) => (food?.price ?? 0) * item.quantity
-        );
+        const total = _.sumBy(billItem, (item) => {
+          const food = foodById[item.food];
+          return (food?.price ?? 0) * item.quantity;
+        });
 
         return {
           key: memberId,
           member: memberId,
+          totalFood: total,
+          shippingFee: shippingFeePerMemberByMember,
+          discountAmount: discountAmountPerMemberByMember,
           money: _.round(total + avrageByMember),
         };
       });
     }
 
     return Object.entries(billItemByMember).map(([memberId, billItem]) => {
-      const food = foodById[billItem[0].food];
-      const total = _.sumBy(
-        billItem,
-        (item) => (food?.price ?? 0) * item.quantity
+      const total = _.sumBy(billItem, (item) => {
+        const food = foodById[item.food];
+        return (food?.price ?? 0) * item.quantity;
+      });
+      const countQuantity = _.sumBy(
+        billItem.filter((item) => item.member === memberId),
+        "quantity"
       );
       return {
         key: memberId,
         member: memberById[memberId]?.name ?? "",
+        totalFood: total,
+        shippingFee: shippingFeePerMemberByFood * countQuantity,
+        discountAmount: discountAmountPerMemberByFood,
         money: _.round(total + avrageByFood),
       };
     });
