@@ -1,17 +1,18 @@
 import * as React from "react";
 import { List, Table, TableProps, Badge, Tag, Space, Typography } from "antd";
-import { BillItem, CalculateMode, Food, Member } from "./types";
+import {
+  BillItem,
+  CalculateMode,
+  Food,
+  Member,
+  ResultItemTable,
+} from "./types";
 import _ from "lodash";
 import { numify } from "numify";
+import { useIsDesktop } from "../share/hooks";
+import ResultMobile from "./ResultMobile";
+import { formatNumber } from "../share/helper";
 const { Text } = Typography;
-
-type ResultItemTable = {
-  member: string;
-  totalFood: number;
-  shippingFee: number;
-  discountAmount: number;
-  money: number;
-};
 
 type ResultProps = {
   billItems: BillItem[];
@@ -31,7 +32,7 @@ export const Result = ({
   shippingFee,
 }: ResultProps) => {
   const memberById = _.keyBy(memberList, "id");
-
+  const isDesktop = useIsDesktop();
   const getFoodOfMember = React.useCallback(
     (member: string) => {
       const foodById = _.keyBy(foodList, "id");
@@ -84,7 +85,7 @@ export const Result = ({
       align: "right",
       render(value) {
         return (
-          <Text strong>{new Intl.NumberFormat("en-US").format(value)}</Text>
+          <Text strong>{formatNumber(value)}</Text>
         );
       },
     },
@@ -93,7 +94,7 @@ export const Result = ({
       dataIndex: "totalFood",
       align: "right",
       render(value) {
-        return new Intl.NumberFormat("en-US").format(value);
+        return formatNumber(value);
       },
     },
     {
@@ -101,7 +102,7 @@ export const Result = ({
       dataIndex: "shippingFee",
       align: "right",
       render(value) {
-        return new Intl.NumberFormat("en-US").format(value);
+        return formatNumber(value);
       },
     },
     {
@@ -109,7 +110,7 @@ export const Result = ({
       dataIndex: "discountAmount",
       align: "right",
       render(value) {
-        return "-" + new Intl.NumberFormat("en-US").format(value);
+        return "-" + formatNumber(value);
       },
     },
   ];
@@ -163,21 +164,23 @@ export const Result = ({
       );
       return {
         key: memberId,
-        member: memberById[memberId]?.name ?? "",
+        member: memberId,
         totalFood: total,
         shippingFee: shippingFeePerMemberByFood * countQuantity,
-        discountAmount: discountAmountPerMemberByFood,
+        discountAmount: discountAmountPerMemberByFood * countQuantity,
         money: _.round(total + avrageByFood),
       };
     });
-  }, [
-    billItems,
-    calculatorMode,
-    discountAmount,
-    foodList,
-    memberById,
-    shippingFee,
-  ]);
+  }, [billItems, calculatorMode, discountAmount, foodList, shippingFee]);
 
+  if (!isDesktop)
+    return (
+      <ResultMobile
+        billItems={billItems}
+        dataSource={dataSource}
+        memberList={memberList}
+        foodList={foodList}
+      />
+    );
   return <Table columns={columns} dataSource={dataSource} pagination={false} />;
 };

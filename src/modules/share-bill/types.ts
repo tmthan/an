@@ -16,13 +16,6 @@ export type BillItem = {
     quantity: number;
 }
 
-// export type Bill = {
-//     id: string;
-//     name: string;
-//     created_at: Date;
-//     items: BillItem[];
-// }
-
 export enum CalculateMode {
     ShareByMember = "ShareByMember",
     ShareByFood = "ShareByFood",
@@ -39,3 +32,11 @@ export type ShareBillLog = {
     id: string;
     name: string;
 }
+
+export type ResultItemTable = {
+    member: string;
+    totalFood: number;
+    shippingFee: number;
+    discountAmount: number;
+    money: number;
+  };
